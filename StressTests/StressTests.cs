@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace ConsoleApp1
+namespace StressTests
 {
-	class Program
+	class StressTests
 	{
 		static void Main(string[] args)
 		{
