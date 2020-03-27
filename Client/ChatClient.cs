@@ -26,67 +26,24 @@ namespace CS3500
 
     class ChatClient
     {
-        private static int port = -1;
+        private int port = -1;
 
-        private static ILogger<string> logger;
+        private ILogger<ChatClient> logger;
 
-        static void Main(string[] args)
-        {
-            ChatClient client = new ChatClient();
+        public ChatClient(int port){
+            this.port = port;
+        }
 
-            Console.WriteLine("enter server address:");
-            string serverAddr = Console.ReadLine();
-
-            Console.WriteLine("enter server port:");
-            string portNumber = Console.ReadLine();
-
-            ServiceCollection services = new ServiceCollection();
-
-            ///
-            using (CustomFileLogProvider provider = new CustomFileLogProvider())
-            {
-                services.AddLogging(configure =>
-                {
-                    configure.AddConsole();
-                    configure.AddProvider(provider);
-                    configure.SetMinimumLevel(LogLevel.Debug);
-                });
-            }
-
-            using (ServiceProvider serviceProvider = services.BuildServiceProvider())
-            {
-                logger = serviceProvider.GetRequiredService<ILogger<string>>();
-            }
-            ///
-
-            if (!Int32.TryParse(portNumber, out port))
-            {
-                Console.WriteLine("could not understand that... exiting");
-                logger.LogDebug("User input for port number was not a valid number: " + portNumber);
-            }
-            else
-            {
-                try
-                {
-                    client.ConnectToServer(serverAddr);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"Error in connection {e}");
-                    logger.LogError($"Error in connection {e}");
-                }
-            }
-
-            // Hold the console open
-            Console.WriteLine("Press Enter to Exit");
-            Console.Read();
+        public ChatClient(int port, ILogger<ChatClient> Logger){
+            this.port = port;
+            this.logger = Logger;
         }
 
         /// <summary>
         /// Starts the connection process
         /// </summary>
         /// <param name="serverAddr"></param>
-        private void ConnectToServer(string serverAddr)
+        internal void ConnectToServer(string serverAddr)
         {
             // Parse the IP
             IPAddress addr = IPAddress.Parse(serverAddr);
@@ -114,6 +71,7 @@ namespace CS3500
         private void OnConnected(IAsyncResult ar)
         {
             Console.WriteLine("Was able to contact the server and establish a connection");
+            logger.LogInformation($"Client {port} connected to server successfully");
 
             SocketState theServer = (SocketState)ar.AsyncState;
 
@@ -136,9 +94,8 @@ namespace CS3500
             Console.WriteLine("On Receive callback executing. ");
             SocketState theServer = (SocketState)ar.AsyncState;
             int numBytes = theServer.theSocket.EndReceive(ar);
-
+            logger.LogDebug($"Recieved exactly {numBytes} bytes of data from the server");
             string message = Encoding.UTF8.GetString(theServer.messageBuffer, 0, numBytes);
-
             Console.WriteLine($"   Received {message.Length} characters.  Could be a message (or not) based on protocol");
             Console.WriteLine($"     Data is: {message}");
 

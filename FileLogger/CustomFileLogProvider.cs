@@ -22,7 +22,8 @@ namespace FileLogger
 
 		public void Dispose()
 		{
-			logger.Close();
+			logger?.Close();
+			logger = null;
 		}
 	}
 }

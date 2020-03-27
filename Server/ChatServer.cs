@@ -1,4 +1,7 @@
-﻿using System;
+﻿using FileLogger;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -19,18 +22,9 @@ namespace CS3500
         /// </summary>
         private long larger = 5000;
 
-        static void Main(string[] args)
-        {
-            ChatServer server = new ChatServer();
-            server.StartServer();
+        private ILogger<ChatServer> sLogger;
 
-            // Sleep to prevent the program from closing,
-            // since all the real work is done in separate threads
-            // StartServer is non-blocking
-            // (yes, there are better ways to do this, left as an exercise)
-            Thread.Sleep(10000000);
-        }
-
+        private int successfullySentMessages = 0;
 
 
         /// <summary>
@@ -41,10 +35,11 @@ namespace CS3500
         private TcpListener listener;
 
         /// <summary>
-        ///   Nothing to "construct" at this time
+        ///   Constructs a chat server with the given file logger.
         /// </summary>
-        public ChatServer()
+        public ChatServer(ILogger<ChatServer> logger)
         {
+            this.sLogger = logger;
         }
 
         /// <summary>
@@ -60,6 +55,9 @@ namespace CS3500
             if (!Int32.TryParse(portStr, out port))
             {
                 port = 11000;
+                sLogger.LogDebug("No port given or invalid port number, using default port instead");
+            } else {
+                sLogger.LogDebug($"Starting server with port {port}");
             }
 
             listener = new TcpListener(IPAddress.Any, port);
@@ -84,7 +82,7 @@ namespace CS3500
         private void ConnectionRequested(IAsyncResult ar)
         {
             Console.WriteLine("Contact from client");
-
+            sLogger.LogDebug($"Contact from client");
             // Get the socket
             clients.Add(listener.EndAcceptSocket(ar));
 
@@ -113,16 +111,18 @@ namespace CS3500
                 byte[] messageBytes = Encoding.UTF8.GetBytes(message);
                 List<Socket> toRemove = new List<Socket>();
 
-                Console.WriteLine($"   Sending a message of size: {message.Length}");
+                sLogger.LogInformation($"   Sending a message of size: {message.Length}");
 
                 foreach (Socket s in clients)
                 {
                     try
                     {
                         s.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, SendCallback, s);
+                        sLogger.LogInformation($"Sent message to client {s}");
                     }
                     catch (Exception) // Begin Send fails if client is closed
                     {
+                        sLogger.LogInformation($"Client {s} is closed, removing them from the server");
                         toRemove.Add(s);
                     }
                 }
@@ -168,9 +168,9 @@ namespace CS3500
             //
             Socket client = (Socket)ar.AsyncState;
             long send_length = client.EndSend(ar);
-
-            Console.WriteLine($"   Sent a message of size: {send_length}");
-
+            successfullySentMessages++;
+            sLogger.LogInformation($"   Sent a message of size: {send_length}");
+            sLogger.LogDebug($"Current number of successful messages sent: {successfullySentMessages}");
         }
 
     }

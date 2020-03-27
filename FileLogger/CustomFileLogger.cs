@@ -13,6 +13,8 @@ namespace FileLogger
 
 		StreamWriter writer;
 
+		string categoryName;
+
 		/// <summary>
 		/// Creates a new logger of the specific log level, pointing to the given file, as well as whether or not the logger should 
 		/// create a new file or if it should append to an already existing file.
@@ -20,13 +22,9 @@ namespace FileLogger
 		/// <param name="outputFile"></param>
 		public CustomFileLogger(string categoryName, bool appendToEnd)
 		{
+			this.categoryName = categoryName;
 			string fileName = "LOG_" + categoryName + ".txt";
-			string currentPath = Directory.GetCurrentDirectory();
-			if (!appendToEnd)
-			{
-				File.Create(currentPath + fileName).Close();
-			}
-			writer = File.AppendText(currentPath + fileName);
+			writer = new StreamWriter(fileName, appendToEnd);
 		}
 
 		/// <summary>
@@ -78,7 +76,13 @@ namespace FileLogger
 					break;
 			}
 			sb.Append(state.ToString());
-			writer.WriteLineAsync(sb.ToString());
+			writer.WriteLine(sb.ToString());
+			
+			/// The following three lines are done in order to esnure that data is written to the file if the program is closed abnormally
+			/// This is primarily meant for the ChatServer, as it will never end normally, and thus never log information otherwise.
+			writer.Close();
+			string fileName = "LOG_" + categoryName + ".txt";
+			writer = new StreamWriter(fileName, true);
 		}
 
 		/// <summary>

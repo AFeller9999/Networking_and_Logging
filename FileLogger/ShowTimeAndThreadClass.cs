@@ -14,7 +14,7 @@ namespace FileLogger
 			sb.Append(DateTime.Now);
 			sb.Append(" (");
 			sb.Append(Thread.CurrentThread.ManagedThreadId);
-			sb.Append(" ) ");
+			sb.Append(") ");
 			return sb.ToString() + s;
 		}
 	}
