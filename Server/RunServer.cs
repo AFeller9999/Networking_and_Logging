@@ -8,10 +8,10 @@ using System.Threading;
 
 namespace CS3500
 {
-	class RunServer
+	public static class RunServer
 	{
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
 
             ChatServer server;

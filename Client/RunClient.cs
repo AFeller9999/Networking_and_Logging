@@ -6,12 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Client
+namespace CS3500
 {
-	class RunClient
+	public static class RunClient
 	{
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             ChatClient client;
 
