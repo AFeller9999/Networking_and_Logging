@@ -20,7 +20,8 @@ Hours Estimated/Worked         Assignment                                       
 
 1. Comments to Evaluators:
 
-My work stands on its own.
+It should be noted that, since I am only capable of working with a singular machine, that I have not tested the remote stress tests between computers.
+However, I have tested such using the local IP address and primary port and they have run successfully.
 
 2. Assignment Specific Topics
 Estimated Time: 4 Hours
@@ -31,8 +32,7 @@ Actual Time: 5 Hours
 
 3. Consulted Peers:
 
-I did not talk to anyone in person or over Piazza or any other chat system. I understood the assignment and its specifications and as such I did not need to ask anyone else
-questions about the assignment.
+I did not talk to anyone in person or over Piazza or any other chat system. I understood the assignment and its specifications and as such I did not need to ask anyone elsequestions about the assignment.
 
 4. References:
 

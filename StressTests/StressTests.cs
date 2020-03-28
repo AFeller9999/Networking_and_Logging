@@ -18,7 +18,7 @@ using System.Threading;
 /// File Contents 
 /// 
 ///    This is a class intended to be used to conduct basic stress-tests the ChatClient and ChatServer classes and their connections
-///    to each other. These tests were designed with a singular machine, and as such are all local-based tests.
+///    to each other. Variations of these tests exist for both local and remote testing.
 ///    These tests must be conducted on the command line, using the "dotnet run ..." command.
 /// </summary>
 namespace CS3500
@@ -83,6 +83,12 @@ namespace CS3500
 						case 4:
 							Stress_test_4(args[0].Equals("local"), logger);
 							break;
+						case 5:
+							Stress_test_5(args[0].Equals("remote"), logger, logger2);
+							break;
+						case 6:
+							Stress_test_6(args[0].Equals("remote"), logger);
+							break;
 					}
 				}
 
@@ -102,7 +108,7 @@ namespace CS3500
 			}
 
 			ChatServer server = new ChatServer(logger1);
-			server.StartServerTest();
+			server.StartServerTest(-1, "");
 
 			Thread.Sleep(1000);
 
@@ -127,7 +133,7 @@ namespace CS3500
 			}
 
 			ChatServer server = new ChatServer(logger1);
-			server.StartServerTest();
+			server.StartServerTest(-1, "");
 
 			Thread.Sleep(1000);
 
@@ -154,7 +160,7 @@ namespace CS3500
 			}
 
 			ChatServer server = new ChatServer(logger1);
-			server.StartServerTest();
+			server.StartServerTest(-1, "");
 
 			Thread.Sleep(1000);
 
@@ -183,7 +189,7 @@ namespace CS3500
 			}
 
 			ChatServer server = new ChatServer(logger1);
-			server.StartServerTest();
+			server.StartServerTest(-1, "");
 
 			Thread.Sleep(1000);
 
@@ -191,6 +197,86 @@ namespace CS3500
 			{
 				ChatClient client = new ChatClient(11000);
 				client.ConnectToServer("127.0.0.1");
+			}
+
+			Thread.Sleep(5000);
+
+
+			server.SendMessage("Hello, everyone!");
+			Thread.Sleep(3000);
+			server.SendMessage("Goodbye, everyone!");
+		}
+
+
+		/// <summary>
+		/// Tests a single client connecting to a server, and sending a message to that client.
+		/// </summary>
+		static void Stress_test_5(bool remote, ILogger logger1, ILogger logger2)
+		{
+			if (!remote)
+			{
+				Console.WriteLine("This test is only for a remote setup");
+				return;
+			}
+
+			Console.WriteLine("Enter the port number for this test: ");
+			string port = Console.ReadLine();
+
+			if (!Int32.TryParse(port, out int finalPort)){
+				Console.WriteLine("Invalid port, exiting program!");
+				return;
+			}
+
+			Console.WriteLine("Enter the IP Address for this test: ");
+			string ipAddress = Console.ReadLine();
+
+			ChatServer server = new ChatServer(logger1);
+			server.StartServerTest(finalPort, ipAddress);
+
+			Thread.Sleep(1000);
+
+			ChatClient client = new ChatClient(finalPort, logger2);
+			client.ConnectToServer(ipAddress);
+
+			Thread.Sleep(1000);
+
+
+			server.SendMessage("Hello, world!");
+		}
+
+		/// <summary>
+		/// Tests a single client connecting to a server, and sending a message to that client.
+		/// </summary>
+		static void Stress_test_6(bool remote, ILogger logger)
+		{
+			if (!remote)
+			{
+				Console.WriteLine("This test is only for a remote setup");
+				return;
+			}
+
+			Console.WriteLine("Enter the port number for this test: ");
+			string port = Console.ReadLine();
+
+			if (!Int32.TryParse(port, out int finalPort))
+			{
+				Console.WriteLine("Invalid port, exiting program!");
+				return;
+			}
+
+			Console.WriteLine("Enter the IP Address for this test: ");
+			string ipAddress = Console.ReadLine();
+
+			ChatServer server = new ChatServer(logger);
+			server.StartServerTest(finalPort, ipAddress);
+
+
+			Thread.Sleep(1000);
+
+			for (int i = 0; i < 20; i++)
+			{
+				ChatClient client = new ChatClient(finalPort);
+				client.ConnectToServer(ipAddress);
 			}
 
 			Thread.Sleep(5000);

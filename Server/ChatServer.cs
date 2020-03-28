@@ -99,26 +99,21 @@ namespace CS3500
 
 
 		/// <summary>
-		/// A test variant of the StartServer() method that always starts a server at port 11000 (the default.)
+		/// A test variant of the StartServer() method that always starts a server at the given port, or the default.
 		/// It also does not way for the user to input a message
 		/// </summary>
-		public void StartServerTest()
+		public void StartServerTest(int port, string address)
 		{
+			if (port <= 0) port = 11000;
 
-			int port;
-
-			if (!Int32.TryParse("11000", out port))
-			{
-				port = 11000;
-				sLogger?.LogDebug("No port given or invalid port number, using default port instead");
-			}
-			else
-			{
-				sLogger?.LogDebug($"Starting server with port {port}");
+			sLogger?.LogDebug($"Starting server with port {port}");
+			
+			if (!IPAddress.TryParse(address, out IPAddress ipAddress)){
+				ipAddress = IPAddress.Any;
 			}
 
-			listener = new TcpListener(IPAddress.Any, port);
-			Console.WriteLine($"Server waiting for clients here: 127.0.0.1 on port {port}");
+			listener = new TcpListener(ipAddress, port);
+			Console.WriteLine($"Server waiting for clients here: {ipAddress} on port {port}");
 
 			listener.Start();
 
