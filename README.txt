@@ -4,7 +4,7 @@ Date:       3/29/2020
 Course:     CS 4540, University of Utah, School of Computing
 GitHub ID:  AFeller9999
 Repo:       https://github.com/AFeller9999/Networking_and_Logging.git
-Commit #:   12345678
+Commit #:   3d70e088ab0e82e9f74022e9477328657d9d9b34
 Assignment: Assignment 7 - Logging and Networking
 Copyright:  CS 3500 and Allan Feller - This work may not be copied for use in Academic Coursework.
 
@@ -31,8 +31,7 @@ Actual Time: 5 Hours
 
 3. Consulted Peers:
 
-I did not talk to anyone in person or over Piazza or any other chat system. I understood the assignment and its specifications and as such I did not need to ask anyone else
-questions about the assignment.
+I did not talk to anyone in person or over Piazza or any other chat system. I understood the assignment and its specifications and as such I did not need to ask anyone else questions about the assignment.
 
 4. References:
 
