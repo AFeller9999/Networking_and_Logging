@@ -4,7 +4,7 @@ Date:       3/29/2020
 Course:     CS 4540, University of Utah, School of Computing
 GitHub ID:  AFeller9999
 Repo:       https://github.com/AFeller9999/Networking_and_Logging.git
-Commit #:   3d70e088ab0e82e9f74022e9477328657d9d9b34
+Commit #:   1a55e84586e6cb3833302c55ccb445c371587d3c
 Assignment: Assignment 7 - Logging and Networking
 Copyright:  CS 3500 and Allan Feller - This work may not be copied for use in Academic Coursework.
 
