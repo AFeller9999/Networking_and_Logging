@@ -6,11 +6,29 @@ using System.IO;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
+
+/// <summary> 
+/// Author:    Allan Feller
+/// Partner:   None 
+/// Date:      3/29/2020 
+/// Course:    CS 3500, University of Utah, School of Computing 
+/// Copyright: CS 3500 and Allan Feller - This work may not be copied for use in Academic Coursework. 
+/// 
+/// I, Allan Feller, certify that I wrote this code from scratch and did not copy it in part or whole from  
+/// another source.  All references used in the completion of the assignment are cited in my README file. 
+/// 
+/// File Contents 
+/// 
+///    This is a custom logger that logs to a text file within the directory of the given program. By default it overwrites the given file, but an option is open
+///    to avoid doing so and simply append to the end of the file instead.
 namespace FileLogger
 {
 	class CustomFileLogger : ILogger
 	{
 
+		/// <summary>
+		/// The writer we use to write to the file
+		/// </summary>
 		StreamWriter writer;
 
 		string categoryName;
